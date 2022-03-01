@@ -4,12 +4,12 @@
       <header>
         <h3>Requests Received</h3>
       </header>
-      <ul v-if="hasRequesrs">
+      <ul v-if="hasRequests">
         <request-item
-          v-for="req in ReceivedRequests"
+          v-for="req in receivedRequests"
           :key="req.id"
           :email="req.userEmail"
-          :message="req.email"
+          :message="req.message"
         >
         </request-item>
       </ul>

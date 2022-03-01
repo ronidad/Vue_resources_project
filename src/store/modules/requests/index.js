@@ -5,10 +5,10 @@ export default{
     namespaced: true,
     state() {
         return {
-            request: []
+            requests: []
         };
     },
     mutations,
     actions,
-    getters
+    getters,
 };
