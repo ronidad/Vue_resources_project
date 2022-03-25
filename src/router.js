@@ -9,26 +9,47 @@ import CoDetails from "./pages/requests/CoDetails.vue";
 // import CoCoach from "./pages/requests/CoCoach.vue";
 import RequestReceived from "./pages/requests/RequestReceived.vue";
 import NotFound from "./pages/NotFound.vue";
+import UserAuth from "./pages/auth/UserAuth.vue";
+import store from "./store/index.js";
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
-    { path: '/', redirect: '/coaches' },
-    { path: '/coaches', component: CoachesList },
+    { path: "/", redirect: "/coaches" },
+    { path: "/coaches", component: CoachesList },
     {
-      path: '/coaches/:id',
+      path: "/coaches/:id",
       component: CoachDetails,
       props: true,
       children: [
-        { path: 'contact', component: ContactCoach }, //coaches/2/contact
+        { path: "contact", component: ContactCoach }, //coaches/2/contact
       ],
     },
-    { path: '/register', component: CoachRegistration },
-    { path: '/requests', component: RequestReceived },
-    { path: '/c1', component: CoDetails },
-    { path: '/test', component: TestCoach },
-    { path: '/:notFound(.*)', component: NotFound },
+    {
+      path: "/register",
+      component: CoachRegistration,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: "/requests",
+      component: RequestReceived,
+      meta: { requiresAuth: true },
+    },
+    { path: "/c1", component: CoDetails },
+    { path: "/test", component: TestCoach },
+    { path: "/auth", component: UserAuth, meta: { requiresUnAuth: true } },
+    { path: "/:notFound(.*)", component: NotFound },
   ],
+});
+
+router.beforeEach(function (to, _, next) {
+  if (to.meta.requiresAuth && !store.getters.isAuthenticated) {
+    next("/auth");
+  } else if (to.meta.requiresUnAuth && store.getters.isAuthenticated) {
+    next("/coaches");
+  } else {
+    next();
+  }
 });
 
 export default router;
